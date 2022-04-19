@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using mascota.servicios;
 using mascota.entidades;
 using mascota.servicios.Dto;
+using Microsoft.AspNetCore.Cors;
 
 namespace mascota.api.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("mascotaCors")]
     [ApiController]
     public class MascotaController : ControllerBase
     {
@@ -64,7 +66,7 @@ namespace mascota.api.Controllers
         // POST api/<MascotaController>
         [HttpPost]
         public async Task<IActionResult> CrearMascota([FromBody] MascotaDto mascota)
-        {
+         {
 
             if (!ModelState.IsValid)
             {

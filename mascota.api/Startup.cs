@@ -17,6 +17,7 @@ namespace mascota.api
             Configuration = configuration;
         }
 
+        private string nameCors = "mascotaCors";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -33,6 +34,19 @@ namespace mascota.api
                 option.UseSqlServer(Configuration.GetConnectionString("cadenaConexion")),
                 ServiceLifetime.Transient
             );
+
+            services.AddCors(option =>
+            {
+                option.AddPolicy(this.nameCors,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200/")
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowAnyHeader();
+                    });
+            });
 
             services.AddScoped<IMascotaRepositorio, MascotaRepositorio>();
             services.AddScoped<IMascotaServicio, MascotaServicio>();
@@ -51,6 +65,8 @@ namespace mascota.api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(this.nameCors);
 
             app.UseAuthorization();
 
